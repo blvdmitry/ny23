@@ -1,15 +1,23 @@
 import { WORDS } from "./words.js";
 
+const steps = [
+  { word: "poppy", hint: "🌺" },
+  { word: "sport", hint: "🤸" },
+  { word: "climb", hint: "⛰️" },
+];
+let stepCount = 0;
+
 const NUMBER_OF_GUESSES = 6;
 let guessesRemaining = NUMBER_OF_GUESSES;
 let currentGuess = [];
 let nextLetter = 0;
-let rightGuessString = WORDS[Math.floor(Math.random() * WORDS.length)];
-
-console.log(rightGuessString);
+let rightGuessString;
 
 function initBoard() {
   let board = document.getElementById("game-board");
+  rightGuessString = steps[stepCount].word;
+
+  board.innerHTML = `<div class='hint'>${steps[stepCount].hint}</div>`;
 
   for (let i = 0; i < NUMBER_OF_GUESSES; i++) {
     let row = document.createElement("div");
@@ -108,8 +116,23 @@ function checkGuess() {
   }
 
   if (guessString === rightGuessString) {
-    toastr.success("You guessed right! Game over!");
-    guessesRemaining = 0;
+    console.log(stepCount, steps.length - 1);
+    if (stepCount === steps.length - 1) {
+      toastr.success("Got it already? Check your calendar");
+      guessesRemaining = 0;
+    } else if (stepCount < steps.length - 1) {
+      toastr.success("One step closer");
+      stepCount += 1;
+
+      setTimeout(() => {
+        initBoard();
+        currentGuess = [];
+        found = 0;
+        guessesRemaining = NUMBER_OF_GUESSES;
+        nextLetter = 0;
+      }, 2500);
+    }
+
     return;
   } else {
     guessesRemaining -= 1;

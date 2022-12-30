@@ -1,5 +1,5 @@
 h1 {
- text-align: center;
+  text-align: center;
 }
 
 #game-board {
@@ -52,4 +52,10 @@ h1 {
   margin: 0 2px;
   cursor: pointer;
   text-transform: uppercase;
+  min-width: 32px;
+}
+
+.hint {
+  font-size: 50px;
+  margin-bottom: 16px;
 }

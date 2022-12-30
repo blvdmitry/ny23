@@ -1,5 +1,8 @@
 {
+  "scripts": {
+    "dev": "http-server build"
+  },
   "dependencies": {
-    "live-server": "^1.2.1"
+    "http-server": "14.1.1"
   }
 }
