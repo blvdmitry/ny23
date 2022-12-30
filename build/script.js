@@ -95,7 +95,7 @@ function checkGuess() {
   }
 
   if (!WORDS.includes(guessString)) {
-    toastr.error("Word not in list!");
+    toastr.error("Let's try another word!");
     return;
   }
 
@@ -142,6 +142,7 @@ function checkGuess() {
     } else if (stepCount < steps.length - 1) {
       if (stepCount === 0) toastr.success("Ah, you got the first one right!");
       if (stepCount === 1) toastr.success("One step closer! Ideas?");
+      if (stepCount === 2) toastr.success("Come on, almost there!");
       stepCount += 1;
 
       setTimeout(() => {
