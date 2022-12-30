@@ -1,10 +1,23 @@
 import { WORDS } from "./words.js";
 
+toastr.options = {
+  showMethod: "slideDown",
+  hideMethod: "slideUp",
+  positionClass: "toast-top-full-width",
+};
+
 const steps = [
   { word: "poppy", hint: "🌺" },
+  { word: "mount", hint: "⛰️" },
   { word: "sport", hint: "🤸" },
-  { word: "climb", hint: "⛰️" },
+  { word: "climb", hint: "📈" },
 ];
+
+const colorMap = {
+  green: "#4ade80",
+  yellow: "#facc15",
+  gray: "#94a3b8",
+};
 let stepCount = 0;
 
 const NUMBER_OF_GUESSES = 6;
@@ -17,6 +30,9 @@ function initBoard() {
   let board = document.getElementById("game-board");
   rightGuessString = steps[stepCount].word;
 
+  document.querySelectorAll(".keyboard-button").forEach((el) => {
+    el.style = "";
+  });
   board.innerHTML = `<div class='hint'>${steps[stepCount].hint}</div>`;
 
   for (let i = 0; i < NUMBER_OF_GUESSES; i++) {
@@ -31,6 +47,10 @@ function initBoard() {
 
     board.appendChild(row);
   }
+
+  currentGuess = [];
+  guessesRemaining = NUMBER_OF_GUESSES;
+  nextLetter = 0;
 }
 
 function shadeKeyBoard(letter, color) {
@@ -45,7 +65,7 @@ function shadeKeyBoard(letter, color) {
         return;
       }
 
-      elem.style.backgroundColor = color;
+      elem.style.backgroundColor = colorMap[color] || color;
       break;
     }
   }
@@ -110,18 +130,18 @@ function checkGuess() {
       //flip box
       animateCSS(box, "flipInX");
       //shade box
-      box.style.backgroundColor = letterColor[i];
+      box.style.backgroundColor = colorMap[letterColor[i]] || letterColor[i];
       shadeKeyBoard(guessString.charAt(i) + "", letterColor[i]);
     }, delay);
   }
 
   if (guessString === rightGuessString) {
-    console.log(stepCount, steps.length - 1);
     if (stepCount === steps.length - 1) {
       toastr.success("Got it already? Check your calendar");
       guessesRemaining = 0;
     } else if (stepCount < steps.length - 1) {
-      toastr.success("One step closer");
+      if (stepCount === 0) toastr.success("Ah, you got the first one right!");
+      if (stepCount === 1) toastr.success("One step closer! Ideas?");
       stepCount += 1;
 
       setTimeout(() => {
@@ -140,8 +160,11 @@ function checkGuess() {
     nextLetter = 0;
 
     if (guessesRemaining === 0) {
-      toastr.error("You've run out of guesses! Game over!");
-      toastr.info(`The right word was: "${rightGuessString}"`);
+      toastr.error("Let's try again");
+
+      setTimeout(() => {
+        initBoard();
+      }, 3000);
     }
   }
 }
